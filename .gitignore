@@ -1,3 +1,7 @@
+.idea/
+lib
+*.sh
 assets/
 protected/runtime/
 themes/classic/views/
+images/articles/*

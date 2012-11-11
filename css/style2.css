@@ -1,0 +1,273 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+}
+
+body {
+    font: 12px/18px Arial, Tahoma, Verdana, sans-serif;
+    height: 100%;
+    background: #797367 url(../images/back_pattern.png);
+    margin:0 auto;
+}
+a {
+	color: blue;
+	outline: none;
+	text-decoration: underline;
+}
+a:hover {
+	text-decoration: none;
+}
+p {
+	margin: 0 0 18px
+}
+img {
+	border: none;
+}
+input {
+	vertical-align: middle;
+}
+
+.l-wrapper {
+	width: 1000px;
+	margin: 0 auto;
+    position:relative;
+}
+
+ol, ul {
+    list-style: none;
+}
+
+/* Global syles
+-----------------------------------------------------------------------------*/
+.g-hidden { display: none; }
+
+.g-center { text-align: center; }
+
+.g-right { text-align: right !important; }
+.g-left { text-align: left; }
+
+.g-fleft { float: left; }
+.g-fright { float: right; }
+
+.g-clear { clear: both; }
+
+
+/* Header
+-----------------------------------------------------------------------------*/
+
+.pre-header{
+    position:relative;
+    height: 20px;
+    background: #797367 url(../images/back_pattern.png) 0 100% repeat-x;
+}
+.l-hline{
+    position:relative;
+    height: 10px;
+    background: #797367 url(../images/back_pattern.png) 0 100% repeat-x;
+}
+
+.l-header {
+	height: 160px;
+    background-color: #191512;
+}
+
+    .l-header .logo{
+        position:relative;
+        left: 32px;
+        top: 5px;
+        float: left;
+    }
+
+    .l-header .admin{
+        position:absolute;
+        top: 5px;
+        left: 745px;
+    }
+
+    .l-header .header_foto_list{
+        position:absolute;
+        top: 25px;
+        right: 5px;
+        z-index: 2;
+        margin: 0;
+        padding: 0;
+    }
+
+    .l-header  .header_foto_list li{
+        margin: 1px;
+        padding: 0;
+        display: inline;
+        list-style-type: none;
+    }
+
+    .l-header .header_name{
+        position:relative;
+        /*height: 40px;*/
+        width: 240px;
+        float:right;
+        color: white;
+        font-size: 13px;
+
+        line-height: 1.5;
+        padding-right: 120px;
+        padding-top: 30px;
+    }
+
+/* Middle
+-----------------------------------------------------------------------------*/
+.l-content {
+    background-color: #3c3930;
+    position: relative;
+}
+
+    .menu-hline{
+        position:relative;
+        height: 20px;
+        background-color: #191512;
+
+    }
+    .menu-hline {
+        color: white;
+        font-size: 14px;
+        height: 25px;
+        line-height: 1.8;
+        text-indent: 42px;
+        text-transform: uppercase;
+        width: 100%;
+    }
+
+    .menu-hline span,
+    .menu-hline a {
+        color: white;
+    }
+
+    .menu-hline span,
+    .menu-hline a.selected {
+        color: #3C3930;
+    }
+
+    .menu-hline H1{
+        font-size: 14px;
+    }
+
+    .menu-icon {
+        height: 160px;
+    }
+
+    table.row-ico {
+        text-align: center;
+        margin: 30px 0 10px 170px;
+    }
+
+        table.row-ico td {
+            vertical-align: middle;
+        }
+
+    .bottom-line-small {
+        height: 20px;
+    }
+
+    .bottom-line, .bottom-line-small {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 20px;
+        width: 100%;
+        z-index: 1;
+        background-color: #191512;
+    }
+/* Footer
+-----------------------------------------------------------------------------*/
+.l-footer {
+    margin: 0 auto;
+    width: 1000px;
+	height: 80px;
+}
+
+    .l-footer .about{
+        position: relative;
+        top: 40px;
+        float: left;
+    }
+
+
+/* Page: price
+-----------------------------------------------------------------------------*/
+
+.price_info {
+    padding: 20px 42px 40px;
+    color: white;
+}
+
+    .price_info H1{
+        font-size: 14px;
+        padding: 10px 0px;
+    }
+
+    .price_info H2{
+        padding: 10px 0px;
+    }
+
+    .price_info li{
+        list-style: disc;
+        margin-left: 60px;
+    }
+
+
+.ad-gallery span.zoom {
+    display: block;
+    position: absolute;
+    background: url(/images/zoom.png) left top no-repeat;
+    width: 21px;
+    height: 21px;
+    right: 8px;
+    bottom: 8px;
+    cursor: pointer;
+}
+
+.home {
+    padding-right: 25px;
+    font-size: 10px;
+    line-height: 25px;
+}
+
+.home:hover{
+
+}
+
+.contacts-block {
+    width: 187px;
+    padding: 78px 10px 10px 30px;
+    margin: 0px 0px 11px 10px;
+    color: white;
+    font-size: 14px;
+    background-color: black;
+}
+
+.contacts-block H1 {
+    padding-bottom: 30px;
+    text-transform:uppercase;
+}
+
+.contacts-block p {
+    padding: 0 0 3px 0;
+    margin: 0;
+    line-height: 1.0;
+    font-size: 11px;
+}
