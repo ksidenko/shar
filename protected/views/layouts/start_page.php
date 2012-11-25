@@ -29,7 +29,7 @@
     </div>
 </div><!-- .l-wrapper -->
 
-<?php require_once 'fix_png.php'; ?>
+<?php  $this->widget('CFixPng', array()); ?>
 
 </body>
 </html>

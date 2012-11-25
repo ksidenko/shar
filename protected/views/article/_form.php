@@ -1,4 +1,4 @@
-<div class="article-form">
+<div class="article-form form">
 
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'carticle-form',
@@ -13,11 +13,16 @@
 <!--		--><?php //echo $form->error($model,'code'); ?>
 <!--	</div>-->
 
-    <?php
-        if ($model->isSubArticle()) {
-            echo CHtml::tag('H1', array('class' => 'article'), 'Страница ' . $model->code);
-        }
-    ?>
+    <div class="row">
+        <?php echo $form->labelEx($model,'lang'); ?>
+        <?php echo $form->dropDownList($model,'lang',array('ru' => 'Русский', 'en' => 'Английский'), array('style' => 'display:none')); ?>
+        <?php
+        $arr = array('ru' => 'Русский', 'en' => 'Английский');
+        echo $arr[$model->lang]; ?>
+        <?php echo $form->error($model,'lang'); ?>
+    </div>
+
+
 
     <?php if (!$model->isSubArticle()) { ?>
 	<div class="row">
@@ -76,13 +81,18 @@
         if (!empty($subarticles)) {
             $s = '';
 
-            $sAdd = CHtml::link('добавить', '/article/create/parent_id/' . $model->id);
+            //TODO
+            //$sAdd = CHtml::link('добавить', '/article/create/parent_id/' . $model->id);
+            $sAdd = '';
 
             foreach($subarticles as $subarticle){
-                $sDel = CHtml::link('удалить', '/article/delete/id/' . $subarticle->id );
-                $sEdit = CHtml::link('редактировать', '/article/update/id/' . $subarticle->id );
+                //TODO
+                //$sDel = ' | ' . CHtml::link('удалить', '/article/delete/id/' . $subarticle->id, array('class' => 'link_article_del') );
+                $sDel = '';
 
-                $s .= '<li>' . 'Страница ' . $subarticle->code . '&nbsp;&nbsp;&nbsp;&nbsp;' . $sEdit . ' | ' . $sDel . '</li>';
+                $sEdit = CHtml::link('редактировать', '/article/update/id/' . $subarticle->id . '/lang/' . $subarticle->lang  . '?returnUrl=' . $returnUrl, array('class' => 'link_article_edit'));
+
+                $s .= '<li>' . 'Страница ' . $subarticle->code . '&nbsp;&nbsp;&nbsp;&nbsp;' . $sEdit . $sDel . '</li>';
             }
             if (!empty($s)) {
                 echo "<ul>$s</ul>";
@@ -97,6 +107,9 @@
 
 <?php $this->endWidget(); ?>
 
-    <?php  $this->widget('CGallery', array('edit' => true, 'path' => $path, 'files' => $files, 'model'=>$model,)); ?>
+    <?php
+    if (empty($subarticles)) {
+        $this->widget('CGallery', array('edit' => true, 'path' => $path, 'files' => $files, 'model'=>$model,));
+    } ?>
 
 </div><!-- form -->

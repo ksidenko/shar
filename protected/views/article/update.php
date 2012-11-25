@@ -14,13 +14,22 @@
 ?>
 <div class="middle-inner">
 
-<h1 class="article" >Редактирование страницы "<?php echo $articleHeader; ?>"</h1>
+    <?php
+    $pageTitle = "Редактирование страницы '$articleHeader'";
+
+    if ($model->isSubArticle()) {
+        $pageCode = $model->code;
+        $pageTitle = $pageTitle . " ($pageCode)";
+    }
+    ?>
+<div class="menu-hline"><h1 class="g-fleft"><?php echo $pageTitle; ?></h1></div>
 
 <?php echo $this->renderPartial('_form', array(
     'model'=>$model,
     'subarticles' => $subarticles,
     'path' => $path,
     'files' => $files,
+    'returnUrl' => $returnUrl,
 )); ?>
 
 </div>

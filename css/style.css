@@ -450,24 +450,7 @@ padding-top:7px;
         margin-left: 20px;
     }
 
-.image_prev li {
-    list-style-type: none;
-    border: 2px solid #3C3930;
-}
 
-.image_prev li.active{
-    border: 2px dotted white;
-}
-
-.image_prev .del {
-    color: white;
-    height: 16px;
-    width: 16px;
-    padding-top: 6px;
-    background: url(/images/delete.png) 0px 0px no-repeat;
-    text-decoration: underline;
-
-}
 
 span.zoom {
     background: url("images/zoom.png") no-repeat scroll left top transparent;

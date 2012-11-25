@@ -14,7 +14,7 @@ class PhotoController extends Controller
 	public function filters()
 	{
 		return array(
-			'accessControl', // perform access control for CRUD operations
+			//'accessControl', // perform access control for CRUD operations
 		);
 	}
 
@@ -67,11 +67,13 @@ class PhotoController extends Controller
 			$model->attributes=$_REQUEST['CPhoto'];
             $model->path=CUploadedFile::getInstance($model,'path');
 
+            $transaction=$model->dbConnection->beginTransaction();
 			if ($model->save()) {
 
-                $fileName = Helpers::tempFileName(YiiBase::getPathOfAlias('application') . '/..'. $model->image_path, '') . '.' . $model->path->getExtensionName();
-                $fileName_ = Helpers::tempFileName(YiiBase::getPathOfAlias('application') . '/..'. $model->image_path, '');
-                $folder = YiiBase::getPathOfAlias('application') . '/..'. $model->image_path ;
+                $imagePath = $model->getImagePath();
+                $fileName_ = Helpers::tempFileName(YiiBase::getPathOfAlias('application') . '/..' . $imagePath, '');
+                $fileName = $fileName_ . '.' . $model->path->getExtensionName();
+                $folder = YiiBase::getPathOfAlias('application') . '/..' . $imagePath ;
 
                 $result['msg'] .= $folder . $fileName;
                 $model->path->saveAs($folder . $fileName);
@@ -87,14 +89,16 @@ class PhotoController extends Controller
                 $model->path = $fileName;
                 $model->save();
 
-                //@unlink($fileName_);
+                @unlink($folder . '/' . $fileName_);
                 //$result['image_big_url'] = Yii::app()->request->baseUrl . $model->image_path . "/big/$fileName";
                 //$result['image_thumbs_url'] = Yii::app()->request->baseUrl . $model->image_path . "/thumbs/$fileName";
 
-                $li = Helpers::renderImageBlock ($model->image_path, $fileName, $model->id);
+                $li = Helpers::renderImageBlock ($imagePath, $fileName, $model->id);
+                $transaction->commit();
                 $result['html'] = urlencode($li);
             } else {
                 $result['error'] = $model->getErrors();
+                $transaction->rollback();
             }
 		} else {
             $result['error'] .= print_r($_REQUEST, true);
@@ -136,35 +140,42 @@ class PhotoController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		//if(Yii::app()->request->isPostRequest)
+        $result = array('error' => '', 'msg' => '', );
+
+        //if(Yii::app()->request->isPostRequest)
 		//{
 			// we only allow deletion via POST request
+
 			$model = $this->loadModel($id);
+            $transaction=$model->dbConnection->beginTransaction();
+
+            $imagePath = $model->getImagePath();
             $fileName = $model->path;
             $model->delete();
 
-            $imagePath = Yii::app()->request->getParam('image_path');
-            $folder = YiiBase::getPathOfAlias('application') . '/..'. $imagePath ;
+            $folder = YiiBase::getPathOfAlias('application') . '/..' . $imagePath ;
 
+            $result['msg']['big'] = $folder . '/big/' . $fileName;
             if (file_exists($folder . '/big/' . $fileName)) {
                 @unlink($folder . '/big/' . $fileName);
             }
+
+            $result['msg']['thumbs'] = $folder . '/thumbs/' . $fileName;
             if (file_exists($folder . '/thumbs/' . $fileName)) {
                 @unlink($folder . '/thumbs/' . $fileName);
             }
+
+            $result['msg']['/'] = $folder . '/' . $fileName;
             if (file_exists($folder . '/' . $fileName)) {
                 @unlink($folder . '/' . $fileName);
             }
 
-            $result = array('error' => '', 'msg' => '', );
+            $transaction->commit();
 
             echo json_encode($result);
 
             Yii::app()->end();
 
-			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-//			if(!isset($_GET['ajax']))
-//				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 //		}
 //		else
 //			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');

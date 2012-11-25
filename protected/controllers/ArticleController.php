@@ -6,7 +6,8 @@ class ArticleController extends Controller
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
-	public $layout='//layouts/main_1';
+    public $layout='//layouts/index';
+    public $lang = 'ru';
 
 	/**
 	 * @return array action filters
@@ -32,7 +33,7 @@ class ArticleController extends Controller
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
 				'actions'=>array('create','update'),
-				'users'=>array('@'),
+				'users'=>array('*'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'=>array('admin','delete'),
@@ -48,10 +49,10 @@ class ArticleController extends Controller
 
         $action = $this->action->getId();
 
-        $debug = 1;
+        $this->lang = Yii::app()->request->getParam('lang' /*, Yii::app()->getLanguage()*/);
 
         $basePath = Yii::getPathOfAlias('webroot.js');
-        $baseUrlJs = Yii::app()->getAssetManager()->publish($basePath, true, -1, $debug);
+        $baseUrlJs = Yii::app()->getAssetManager()->publish($basePath, true, -1, YII_DEBUG);
 
         if (in_array($action, array('update')) ) {
             Yii::app()->clientScript->registerScriptFile($baseUrlJs . '/jquery.ajaxfileupload/ajaxfileupload.js', CClientScript::POS_BEGIN);
@@ -67,7 +68,7 @@ class ArticleController extends Controller
 	public function actionView($id)
 	{
 		$this->render('view',array(
-			'model'=>$this->loadModel($id),
+			'model'=>$this->loadModel($id, $this->lang),
 		));
 	}
 
@@ -105,7 +106,7 @@ class ArticleController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-		$model=$this->loadModel($id);
+		$model=$this->loadModel($id, $this->lang);
 
         //$subarticles = CArticle::model()->findAllByAttributes(array('parent_id' => $model->id));
         $subarticles = $model->subarticles;
@@ -121,9 +122,9 @@ class ArticleController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['CArticle']))
-		{
+		if (isset($_POST['CArticle'])) {
 			$model->attributes=$_POST['CArticle'];
+
 			if($model->save() && $returnUrl)
 				$this->redirect($returnUrl);
 		}
@@ -131,7 +132,7 @@ class ArticleController extends Controller
         $code = $model->code;
         $activePage = '';
         if ($model->isSubArticle()) {
-             $activePage = "/" . $model->code;
+            $activePage = "/" . $model->code;
             $code = $model->parent->code;
         }
 
@@ -145,6 +146,7 @@ class ArticleController extends Controller
             'subarticles' => $subarticles,
             'path' => $path,
             'files' => $photos,
+            'returnUrl' => $returnUrl,
 		));
 	}
 
@@ -158,7 +160,7 @@ class ArticleController extends Controller
 		if(Yii::app()->request->isPostRequest)
 		{
 			// we only allow deletion via POST request
-			$this->loadModel($id)->delete();
+			$this->loadModel($id, null)->delete();
 
 			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 			if(!isset($_GET['ajax']))
@@ -199,9 +201,10 @@ class ArticleController extends Controller
 	 * If the data model is not found, an HTTP exception will be raised.
 	 * @param integer the ID of the model to be loaded
 	 */
-	public function loadModel($id)
+	public function loadModel($id, $lang)
 	{
-		$model=CArticle::model()->findByPk($id);
+        //echo $id; die;
+		$model=CArticle::model()->findByPk(array('id' => $id, 'lang' => $lang));
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;

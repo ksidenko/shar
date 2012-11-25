@@ -2,7 +2,7 @@
     gallery_init();
 </script>
 <div class="menu-hline"><h1 class="g-fleft"><?php echo $article->header;?></h1>
-    <?php if (!Yii::app()->user->isGuest) { echo ' ' . CHtml::link('редактировать', '/article/update/id/' . $article->id . '?returnUrl=' . $returnUrl, array('style'=>'color:#626281')); } ?>
+    <?php if (!Yii::app()->user->isGuest) { echo ' ' . CHtml::link('редактировать', '/article/update/id/' . $article->id . '/lang/' . $article->lang . '?returnUrl=' . $returnUrl, array('class'=>'link_article_edit')); } ?>
     <?php if (isset($activePage)) { ?>
     <div class="g-fleft" >
         <?php

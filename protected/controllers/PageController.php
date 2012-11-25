@@ -2,7 +2,7 @@
 
 class PageController extends Controller
 {
-    public $layout='//layouts/layout_index';
+    public $layout='//layouts/index';
 
     public $pageTextInfo;
     public $pageKeywords;
@@ -24,7 +24,9 @@ class PageController extends Controller
 
             Yii::app()->clientScript->registerScriptFile($baseUrlJs . '/lightbox_init.js', CClientScript::POS_END);
 
-        } else if ($action == 'main') {
+        }
+
+        if ($action == 'main') {
             Yii::app()->clientScript->registerScriptFile($baseUrlJs . '/image_resizer.js', CClientScript::POS_END);
         }
 
@@ -32,8 +34,8 @@ class PageController extends Controller
    	}
 
 	public function actionIndex() {
-        $this->layout = '//layouts/index_page';
-        $this->pageTitle = '';
+        $this->layout = '//layouts/start_page';
+        $this->pageTitle = Yii::t('app', 'start_page');
 
 		$this->render('index');
 	}
@@ -45,8 +47,10 @@ class PageController extends Controller
     }
 
     public function actionInterer($type = 'flat', $activePage = 1) {
-        $returnUrl = '/page/interer/activePage/' . $activePage . '/type/' . $type;
         $lang = Yii::app()->getLanguage();
+
+        $returnUrl = '/page/interer/activePage/' . $activePage . '/type/' . $type . '/lang/' . $lang;
+
 
         $code = 'interer_' . $type;
         $article = CArticle::model()->findByAttributes(array('code' => $code, 'lang' => $lang));
@@ -88,8 +92,9 @@ class PageController extends Controller
     }
 
     public function actionGraph($type = 'sign') {
-        $returnUrl = '/page/graph/type/' . $type;
         $lang = Yii::app()->getLanguage();
+        $returnUrl = '/page/graph/type/' . $type . '/lang/' . $lang;
+
 
         $code = 'graph_' . $type;
         $article = CArticle::model()->findByAttributes(array('code' => $code, 'lang' => $lang));
@@ -118,7 +123,6 @@ class PageController extends Controller
     public function actionPrice() {
         $lang = Yii::app()->getLanguage();
         $this->pageTitle = Yii::t('app', 'page_price');
-        //$this->pageTitle = 'Порядок работы и цены';
 
         $this->render('price-' . $lang, array());
     }

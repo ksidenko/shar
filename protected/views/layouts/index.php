@@ -12,6 +12,7 @@
     <link rel="stylesheet" type="text/css" href="<?php //echo Yii::app()->request->baseUrl; ?>/js/jquery.ad-gallery/jquery.ad-gallery.css" />
     <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/jquery.ad-gallery.css" type="text/css" media="screen, projection" />
     <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.lightbox/css/jquery.lightbox-0.5.css" type="text/css" media="screen, projection" />
+    <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/form.css" type="text/css" media="screen, projection" />
     <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery-1.3.2.min.js"></script>
 </head>
 <body>
@@ -46,7 +47,7 @@
         </div>
     </div><!-- .l-footer -->
 
-    <?php require_once 'fix_png.php'; ?>
+    <?php  $this->widget('CFixPng', array()); ?>
 </div><!-- .l-wrapper -->
 
 </body>

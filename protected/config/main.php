@@ -36,7 +36,7 @@ return array(
 		'user'=>array(
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
-            'loginUrl'=>array('site/login'),
+            'loginUrl'=>array('login'),
 		),
 		// uncomment the following to enable URLs in path-format
 
@@ -51,6 +51,8 @@ return array(
 			'urlFormat'=>'path',
             'showScriptName'=>false,
 			'rules'=>array(
+                'login' => '/site/login',
+                'logout' => '/site/logout',
 
 			    '/*' => 'page/index',
                 '/main/*' => '/page/main',
@@ -76,7 +78,7 @@ return array(
 		),
 		'db'=>array(
 			//'connectionString' => 'mysql:host=shar.mysql;dbname=shar_db',
-			'connectionString' => 'mysql:host=localhost;dbname=shar_db',
+			'connectionString' => 'mysql:host=localhost;dbname=shar_db_13.11.2012',
 			'emulatePrepare' => true,
 			//'username' => 'shar_mysql',
 			//'password' => 'uxu8s2hm',

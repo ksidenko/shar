@@ -10,7 +10,7 @@
 
             if ( confirm('Вы действительно хотите удалить изображение?') ) {
                 $.ajax({
-                    url: '/photo/delete/id/' + photo_id + '?image_path='+$('#image_path').val(),
+                    url: '/photo/delete/id/' + photo_id,
                     dataType: 'json',
                     success: function (data, status) {
                         if (typeof(data.error) != 'undefined') {
@@ -36,7 +36,7 @@
         });
     }
 
-    function ajaxFileUpload(elem_id, article_id, image_path) {
+    function ajaxFileUpload(elem_id, article_id) {
         //starting setting some animation when the ajax starts and completes
         $("#loading")
             .ajaxStart(function () {
@@ -49,7 +49,7 @@
         if ($('#'+elem_id).val() == '') return false;
 
         $.ajaxFileUpload({
-            url:'/photo/create?CPhoto[article_id]=' + article_id + '&CPhoto[image_path]=' + image_path,
+            url:'/photo/create?CPhoto[article_id]=' + article_id,
             secureuri:false,
             fileElementId: elem_id,
             dataType:'json',
@@ -65,7 +65,7 @@
                     } else {
                         //alert(data.msg);
                         var li = $(urldecode(data.html)).hide();
-                        li.insertAfter($('.image_prev li:last'));
+                        li.insertAfter($('.image_preview li:last'));
                         li.fadeIn("slow");
                         addEvent(li);
                         $('#'+elem_id).val('');
@@ -81,15 +81,15 @@
 
     $(function(){
         $('#buttonUpload').click(function(){
-            ajaxFileUpload('CPhoto_path', $('#article_id').val(), $('#image_path').val());
+            ajaxFileUpload('CPhoto_path', $('#article_id').val());
         });
 
-        $('.image_prev').find('li').each(function () {
+        $('.image_preview').find('li').each(function () {
             addEvent($(this));
         });
     });
 </script>
-<div class="image_prev">
+<div class="image_preview">
     <?php
         foreach( $this->files as $file) {
             $li = Helpers::renderImageBlock ($this->path, $file->path, $file->id);
@@ -102,7 +102,6 @@
 <div>
     <?php
         echo CHtml::hiddenField('article_id', $this->model->id);
-        echo CHtml::hiddenField('image_path', $this->path);
 
         echo CHtml::activeFileField(CPhoto::model(), 'path', array('class' => 'input'));
         echo CHtml::submitButton('Добавить изображение', array('id' => "buttonUpload") );
