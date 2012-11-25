@@ -92,7 +92,7 @@
 
                 $sEdit = CHtml::link('редактировать', '/article/update/id/' . $subarticle->id . '/lang/' . $subarticle->lang  . '?returnUrl=' . $returnUrl, array('class' => 'link_article_edit'));
 
-                $s .= '<li>' . 'Страница ' . $subarticle->code . '&nbsp;&nbsp;&nbsp;&nbsp;' . $sEdit . $sDel . '</li>';
+                $s .= '<li style="color:white;" >' . 'Страница ' . $subarticle->code . '&nbsp;&nbsp;&nbsp;&nbsp;' . $sEdit . $sDel . '</li>';
             }
             if (!empty($s)) {
                 echo "<ul>$s</ul>";

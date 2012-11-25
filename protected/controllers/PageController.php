@@ -6,6 +6,7 @@ class PageController extends Controller
 
     public $pageTextInfo;
     public $pageKeywords;
+    public $pageDescription;
 
     protected function beforeAction($action) {
 
@@ -59,6 +60,7 @@ class PageController extends Controller
 
         $this->pageTitle = !empty($article->title) ? $article->title : $article->header;
         $this->pageKeywords = $article->keyword;
+        $this->pageDescription = $article->descr;
 
         $articleHeader = $article->header;
 

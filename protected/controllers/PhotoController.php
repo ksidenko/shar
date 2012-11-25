@@ -107,6 +107,79 @@ class PhotoController extends Controller
         Yii::app()->end();
 	}
 
+
+    public function actionUploadPhotoArchive()
+    {
+        $model=new CPhoto;
+        $result = array('error' => '', 'msg' => '', 'html' => '');
+        if (isset($_REQUEST['CPhoto'])) {
+            $model->attributes=$_REQUEST['CPhoto'];
+            $model->path=CUploadedFile::getInstance($model,'pathArchive');
+
+
+            $archivePath = $model->path->getTempName();
+            $archiveTempPath = '/tmp/upload/';
+
+            die('path = '. $archivePath);
+
+
+            $zip = new ZipArchive();
+            if (!$zip->open($archivePath)) {
+                $result['error'] = $model->getErrors();
+
+                echo json_encode($result);
+                Yii::app()->end();
+            }
+            $zip->extractTo($archiveTempPath);
+            $zip->close();
+
+            $files = Helpers::scandir($archiveTempPath, '*.jpeg');
+
+            $transaction = $model->dbConnection->beginTransaction();
+
+            //TODO - remove photos before delete!
+            //$model->deleteAllByAttributes(array('article_id' => $model->article_id));
+            $imagePath = $model->getImagePath();
+
+            foreach($files as $fileNameOrig) {
+
+                $fileName_ = Helpers::tempFileName(YiiBase::getPathOfAlias('application') . '/..' . $imagePath, '');
+                $fileName = $fileName_ . '.' . $model->path->getExtensionName();
+                $folder = YiiBase::getPathOfAlias('application') . '/..' . $imagePath ;
+
+                $result['msg'] .= $folder . $fileName;
+
+                move_uploaded_file($archiveTempPath . $fileNameOrig, $folder . $fileName);
+                //$model->path->saveAs($folder . $fileName);
+
+                $article = $model->article;
+                if ($article->isSubArticle()) {
+                    $article = $article->parent;
+                }
+
+                Helpers::imageresize($folder . '/big/' . $fileName, $folder . $fileName, $article->img_big_h, 1111, 90, array('fix_h' => true));
+                Helpers::imageresize($folder . '/thumbs/' . $fileName, $folder . $fileName, $article->img_thumb_h, 1111, 90, array('fix_h' => true));
+
+                $model->path = $fileName;
+                $model->save();
+
+                @unlink($folder . '/' . $fileName_);
+
+                $li = Helpers::renderImageBlock ($imagePath, $fileName, $model->id);
+                $result['html'] .= urlencode($li);
+            }
+
+            $transaction->commit();
+        } else {
+            $result['error'] .= print_r($_REQUEST, true);
+        }
+
+        echo json_encode($result);
+
+        Yii::app()->end();
+    }
+
+
 	/**
 	 * Updates a particular model.
 	 * If update is successful, the browser will be redirected to the 'view' page.

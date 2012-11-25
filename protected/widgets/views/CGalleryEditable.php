@@ -79,10 +79,65 @@
         return false;
     }
 
+
+    function ajaxFileUploadArchive(elem_id, article_id) {
+        //starting setting some animation when the ajax starts and completes
+        $("#loading")
+            .ajaxStart(function () {
+                $(this).show();
+            })
+            .ajaxComplete(function () {
+                $(this).hide();
+            });
+
+        if ($('#'+elem_id).val() == '') return false;
+
+        //if ( confirm('Все существующие изображения будут заменены, вы точно этого хотите?') ) {
+            $.ajaxFileUpload({
+                url:'/photo/uploadPhotoArchive?CPhoto[article_id]=' + article_id,
+                secureuri:false,
+                fileElementId: elem_id,
+                dataType:'json',
+                success:function (data, status) {
+                    if (typeof(data.error) != 'undefined') {
+                        if (data.error != '') {
+
+                            var s = '';
+                            for(var i in data.error) {
+                                s += data.error[i]  + '\n';
+                            }
+                            alert(s);
+                        } else {
+                            //alert(data.msg);
+                            $('.image_preview li').remove();
+                            var lis = $(urldecode(data.html));
+                            lis.appendTo($('.image_preview'));
+
+                            $.each('.image_preview li', function () {
+                                addEvent($(this));
+                            });
+
+                            $('#'+elem_id).val('');
+                        }
+                    }
+                },
+                error:function (data, status, e) {
+                    alert(e);
+                }
+            });
+        //}
+        return false;
+    }
+
     $(function(){
         $('#buttonUpload').click(function(){
             ajaxFileUpload('CPhoto_path', $('#article_id').val());
         });
+
+        $('#buttonUploadArchive').click(function(){
+            ajaxFileUploadArchive('CPhoto_pathArchive', $('#article_id').val());
+        });
+
 
         $('.image_preview').find('li').each(function () {
             addEvent($(this));
@@ -105,5 +160,9 @@
 
         echo CHtml::activeFileField(CPhoto::model(), 'path', array('class' => 'input'));
         echo CHtml::submitButton('Добавить изображение', array('id' => "buttonUpload") );
+
+        echo '<br>';
+        echo CHtml::activeFileField(CPhoto::model(), 'pathArchive', array('class' => 'input'));
+        echo CHtml::submitButton('Добавить архив с изображениями', array('id' => "buttonUploadArchive") );
     ?>
 </div>

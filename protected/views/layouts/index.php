@@ -6,7 +6,7 @@
     <title><?php echo CHtml::encode($this->pageTitle); ?></title>
 
     <meta name="keywords" content="<?php if(isset($this->pageKeywords)) echo $this->pageKeywords; ?>" />
-    <meta name="description" content="" />
+    <meta name="description" content="<?php if(isset($this->pageDescription)) echo $this->pageDescription; ?>" />
     <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.lightbox/css/jquery.lightbox-0.5.css" type="text/css" media="screen, projection" />
     <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/style2.css" type="text/css" media="screen, projection" />
     <link rel="stylesheet" type="text/css" href="<?php //echo Yii::app()->request->baseUrl; ?>/js/jquery.ad-gallery/jquery.ad-gallery.css" />
