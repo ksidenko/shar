@@ -90,8 +90,6 @@ class PhotoController extends Controller
                 $model->save();
 
                 @unlink($folder . '/' . $fileName_);
-                //$result['image_big_url'] = Yii::app()->request->baseUrl . $model->image_path . "/big/$fileName";
-                //$result['image_thumbs_url'] = Yii::app()->request->baseUrl . $model->image_path . "/thumbs/$fileName";
 
                 $li = Helpers::renderImageBlock ($imagePath, $fileName, $model->id);
                 $transaction->commit();
