@@ -135,7 +135,8 @@
         });
 
         $('#buttonUploadArchive').click(function(){
-            ajaxFileUploadArchive('CPhoto_pathArchive', $('#article_id').val());
+            ajaxFileUploadArchive('CPhoto_path', $('#article_id').val());
+            return false;
         });
 
 
@@ -160,9 +161,37 @@
 
         echo CHtml::activeFileField(CPhoto::model(), 'path', array('class' => 'input'));
         echo CHtml::submitButton('Добавить изображение', array('id' => "buttonUpload") );
+        ?>
+    <br>
+        <?php
+            //echo CHtml::activeFileField(CPhoto::model(), 'path', array('class' => 'input'));
+            //echo CHtml::submitButton('Добавить архив с изображениями', array('id' => "buttonUploadArchive") );
+        ?>
+<!--    <form name="form" action="" method="POST" enctype="multipart/form-data">-->
+<!--        <table cellpadding="0" cellspacing="0" class="tableForm">-->
+<!---->
+<!--            <thead>-->
+<!--            <tr>-->
+<!--                <th>Ajax File Upload</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--            <tr>-->
+<!--                <td><input id="CPhoto_path" type="file" size="45" name="CPhoto_path" class="input"></td>-->
+<!---->
+<!---->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <td>Please select a file and click Upload button</td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--            <tfoot>-->
+<!--            <tr>-->
+<!--                <td><button class="button" id="buttonUploadArchive" >Upload</button></td>-->
+<!--            </tr>-->
+<!--            </tfoot>-->
+<!---->
+<!--        </table>-->
+<!--    </form>-->
 
-        echo '<br>';
-        echo CHtml::activeFileField(CPhoto::model(), 'pathArchive', array('class' => 'input'));
-        echo CHtml::submitButton('Добавить архив с изображениями', array('id' => "buttonUploadArchive") );
-    ?>
 </div>

@@ -110,11 +110,15 @@ class PhotoController extends Controller
 
     public function actionUploadPhotoArchive()
     {
+        print_r($_FILES); die;
+
         $model=new CPhoto;
         $result = array('error' => '', 'msg' => '', 'html' => '');
         if (isset($_REQUEST['CPhoto'])) {
             $model->attributes=$_REQUEST['CPhoto'];
-            $model->path=CUploadedFile::getInstance($model,'pathArchive');
+            $model->path=CUploadedFile::getInstance($model,'path');
+
+
 
 
             $archivePath = $model->path->getTempName();

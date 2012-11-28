@@ -311,3 +311,8 @@ a.link_article_del {
 .article-form {
     padding-left: 40px;
 }
+
+#login-form {
+    padding: 10px 0 200px 40px;
+}
+

@@ -18,7 +18,7 @@
         <?php echo $form->dropDownList($model,'lang',array('ru' => 'Русский', 'en' => 'Английский'), array('style' => 'display:none')); ?>
         <?php
         $arr = array('ru' => 'Русский', 'en' => 'Английский');
-        echo $arr[$model->lang]; ?>
+        echo CHtml::tag('b', array('style' => 'color:white;'), $arr[$model->lang]); ?>
         <?php echo $form->error($model,'lang'); ?>
     </div>
 
@@ -105,11 +105,13 @@
         <?php echo CHtml::submitButton($model->isNewRecord ? 'Создать' : 'Сохранить'); ?>
     </div>
 
-<?php $this->endWidget(); ?>
+    <?php $this->endWidget(); ?>
 
     <?php
     if (empty($subarticles)) {
         $this->widget('CGallery', array('edit' => true, 'path' => $path, 'files' => $files, 'model'=>$model,));
     } ?>
+
+
 
 </div><!-- form -->
