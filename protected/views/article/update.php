@@ -17,19 +17,20 @@
     <?php
     $pageTitle = "Редактирование страницы '$articleHeader'";
 
-    if ($model->isSubArticle()) {
-        $pageCode = $model->code;
-        $pageTitle = $pageTitle . " ($pageCode)";
+    if ($isSubArticle) {
+        $pageNumber = $articleModel->number;
+        $pageTitle = $pageTitle . " ($pageNumber)";
     }
     ?>
 <div class="menu-hline"><h1 class="g-fleft"><?php echo $pageTitle; ?></h1></div>
 
 <?php echo $this->renderPartial('_form', array(
-    'model'=>$model,
+    'articleModels' => $articleModels,
+    'articleModel' => $articleModel,
     'subarticles' => $subarticles,
+    'isSubArticle' => $isSubArticle,
     'path' => $path,
     'files' => $files,
-    'returnUrl' => $returnUrl,
 )); ?>
 
 </div>

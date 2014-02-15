@@ -64,7 +64,7 @@ class PageController extends Controller
 
         $articleHeader = $article->header;
 
-        $subarticle = CArticle::model()->findByAttributes(array('parent_id' => $article->id, 'code' => $activePage, 'lang' => $lang));
+        $subarticle = CArticle::model()->findByAttributes(array('parent_id' => $article->id, 'number' => $activePage, 'lang' => $lang));
         if ($subarticle == false) {    $this->redirect('/main');   }
 
         $this->pageTextInfo = $subarticle->descr;
@@ -77,7 +77,7 @@ class PageController extends Controller
             $activePage = 1;
         }
 
-        $path = "/images/articles/{$article->code}/$activePage/";
+        $path = "/images/articles/{$article->code}/{$subarticle->code}/";
         //print_r($path); die;
         $this->render('interer', array(
               'article' => $article,

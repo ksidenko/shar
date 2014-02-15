@@ -173,7 +173,7 @@ class Helpers {
 		ini_set('memory_limit', $old_memory_limit);
 	}
 
-    static function delete_directory($dir){
+    static function deleteDirectory($dir){
         if ($handle = opendir($dir)) {
             $array = array();
 
@@ -184,7 +184,7 @@ class Helpers {
                     {
                         if(!@rmdir($dir.$file)) // Empty directory? Remove it
                         {
-                            self::delete_directory($dir.$file.'/'); // Not empty? Delete the files inside it
+                            self::deleteDirectory($dir.$file.'/'); // Not empty? Delete the files inside it
                         }
                     }
                     else

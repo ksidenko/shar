@@ -11,7 +11,7 @@ return array(
     'language' =>'ru',
 
 	// preloading 'log' component
-	'preload'=>array('log', 'ELangHandler'),
+	'preload' => array('log', 'ELangHandler'),
 
 	// autoloading model and component classes
 	'import'=>array(
@@ -22,7 +22,6 @@ return array(
 	),
 
 	'modules'=>array(
-		// uncomment the following to enable the Gii tool
 		'gii'=>array(
 			'class'=>'system.gii.GiiModule',
 			'password'=>'1',
@@ -35,8 +34,8 @@ return array(
 	'components'=>array(
 		'user'=>array(
 			// enable cookie-based authentication
-			'allowAutoLogin'=>true,
-            'loginUrl'=>array('login'),
+			'allowAutoLogin' => true,
+            'loginUrl' => array('login'),
 		),
 		// uncomment the following to enable URLs in path-format
 
@@ -77,21 +76,15 @@ return array(
 			),
 		),
 		'db'=>array(
-			//'connectionString' => 'mysql:host=shar.mysql;dbname=shar_db',
 			'connectionString' => 'mysql:host=localhost;dbname=shar_db_13.11.2012',
 			'emulatePrepare' => true,
-			//'username' => 'shar_mysql',
-			//'password' => 'uxu8s2hm',
 			'username' => 'root',
 			'password' => '1',
 			'charset' => 'utf8',
-            // включаем профайлер
             'enableProfiling' => YII_DEBUG,
-            // показываем значения параметров
             'enableParamLogging' => YII_DEBUG,
 		),
 		'errorHandler'=>array(
-			// use 'site/error' action to display errors
             'errorAction'=>'site/error',
         ),
 		'log'=>array(
@@ -101,23 +94,16 @@ return array(
 					'class'=>'CFileLogRoute',
 					'levels'=>'error, warning',
 				),
-				// uncomment the following to show log messages on web pages
-
 				array(
 					'class'=>'CWebLogRoute',
                     'levels'=>'error, warning',
 				),
-
 			),
 		),
 	),
 
-	// application-level parameters that can be accessed
-	// using Yii::app()->params['paramName']
 	'params'=>array(
-
-		// this is used in contact page
-		'adminEmail'=>'webmaster@example.com',
+		'adminEmail' => 'webmaster@example.com',
         'image_path' => dirname(__FILE__) . '/../../images/articles/',
         'image_render_max_execution_time' => 60 * 60 ,
         'image_url' => '',

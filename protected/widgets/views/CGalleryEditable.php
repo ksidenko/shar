@@ -65,7 +65,7 @@
                     } else {
                         //alert(data.msg);
                         var li = $(urldecode(data.html)).hide();
-                        li.insertAfter($('.image_preview li:last'));
+                        $('.image_preview ul').append(li);
                         li.fadeIn("slow");
                         addEvent(li);
                         $('#'+elem_id).val('');
@@ -146,12 +146,14 @@
     });
 </script>
 <div class="image_preview">
+    <ul>
     <?php
         foreach( $this->files as $file) {
             $li = Helpers::renderImageBlock ($this->path, $file->path, $file->id);
             echo $li . PHP_EOL;
         }
     ?>
+    </ul>
     <div class="g-clear"></div>
 </div>
 <br/>

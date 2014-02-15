@@ -68,12 +68,19 @@ class PhotoController extends Controller
             $model->path=CUploadedFile::getInstance($model,'path');
 
             $transaction=$model->dbConnection->beginTransaction();
-			if ($model->save()) {
+			if ($model->save() && $model->path) {
 
                 $imagePath = $model->getImagePath();
-                $fileName_ = Helpers::tempFileName(YiiBase::getPathOfAlias('application') . '/..' . $imagePath, '');
-                $fileName = $fileName_ . '.' . $model->path->getExtensionName();
                 $folder = YiiBase::getPathOfAlias('application') . '/..' . $imagePath ;
+
+                if (!file_exists($folder)) {
+                    mkdir($folder);
+                    mkdir($folder . '/big');
+                    mkdir($folder . '/thumbs');
+                }
+
+                $fileName_ = Helpers::tempFileName($folder, '');
+                $fileName = $fileName_ . '.' . $model->path->getExtensionName();
 
                 $result['msg'] .= $folder . $fileName;
                 $model->path->saveAs($folder . $fileName);
@@ -83,9 +90,8 @@ class PhotoController extends Controller
                     $article = $article->parent;
                 }
 
-                Helpers::imageresize($folder . '/big/' . $fileName, $folder . $fileName, $article->img_big_h, 1111, 90, array('fix_h' => true));
-                Helpers::imageresize($folder . '/thumbs/' . $fileName, $folder . $fileName, $article->img_thumb_h, 1111, 90, array('fix_h' => true));
-
+                Helpers::imageresize($folder . '/big/' . $fileName, $folder . $fileName, 1111, $article->img_big_h, 90, array('fix_h' => true));
+                Helpers::imageresize($folder . '/thumbs/' . $fileName, $folder . $fileName, 1111, $article->img_thumb_h, 90, array('fix_h' => true));
                 $model->path = $fileName;
                 $model->save();
 

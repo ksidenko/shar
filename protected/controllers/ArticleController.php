@@ -8,6 +8,8 @@ class ArticleController extends Controller
 	 */
     public $layout='//layouts/index';
     public $lang = 'ru';
+    public $arrLanguages = array('ru' => 'Русский', 'en' => 'Английский');
+    public $returnUrl = '/';
 
 	/**
 	 * @return array action filters
@@ -24,32 +26,35 @@ class ArticleController extends Controller
 	 * This method is used by the 'accessControl' filter.
 	 * @return array access control rules
 	 */
-	public function accessRules()
-	{
-		return array(
-			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
-				'users'=>array('*'),
-			),
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
-				'users'=>array('*'),
-			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
-			),
-			array('deny',  // deny all users
-				'users'=>array('*'),
-			),
-		);
-	}
+    //TODO
+//	public function accessRules()
+//	{
+//		return array(
+//			array('allow',  // allow all users to perform 'index' and 'view' actions
+//				'actions'=>array('index','view'),
+//				'users'=>array('*'),
+//			),
+//			array('allow', // allow authenticated user to perform 'create' and 'update' actions
+//				'actions'=>array('create','update'),
+//				'users'=>array('*'),
+//			),
+//			array('allow', // allow admin user to perform 'admin' and 'delete' actions
+//				'actions'=>array('admin','delete'),
+//				'users'=>array('admin'),
+//			),
+//			array('deny',  // deny all users
+//				'users'=>array('*'),
+//			),
+//		);
+//	}
 
     protected function beforeAction($action) {
 
         $action = $this->action->getId();
 
         $this->lang = Yii::app()->request->getParam('lang' /*, Yii::app()->getLanguage()*/);
+
+        $this->returnUrl = Yii::app()->request->getParam('returnUrl', $this->returnUrl);
 
         $basePath = Yii::getPathOfAlias('webroot.js');
         $baseUrlJs = Yii::app()->getAssetManager()->publish($basePath, true, -1, YII_DEBUG);
@@ -78,25 +83,110 @@ class ArticleController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new CArticle;
+        if (isset($_POST['cancel'])) {
+            //Yii::app()->user->setFlash('success','Изменения были отменены');
+            $this->redirect($this->returnUrl);
+        }
 
         $parentId = Yii::app()->request->getParam('parent_id');
-        $model->parent_id = $parentId;
+        $parentModel = $this->loadModel($parentId, 'ru');
 
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+        $articleModels = array();
 
-		if(isset($_POST['CArticle']))
-		{
-			$model->attributes=$_POST['CArticle'];
-			if($model->save()) {
-				//$this->redirect(array('update','id'=>$model->id));
+        foreach ( $this->arrLanguages as $lang => $langName) {
+            $articleModels[$lang] = $this->loadModel(null, $lang);
+            $articleModels[$lang]->parent_id = $parentId;
+            $articleModels[$lang]->isNewRecord = true;
+            $articleModels[$lang]->number = 1;
+        }
+
+        $articleModel = $articleModels['ru'];
+        $isSubArticle = $articleModel->isSubArticle();
+        $subarticles = $articleModel->subarticles;
+
+        if ($articleModel->isSubArticle()) {
+            $articleHeader = $articleModel->parent->header;
+        } else {
+            $articleHeader = $articleModel->header;
+        }
+
+        if (isset($_POST['CArticle'])) {
+
+            //echo '<pre>' . print_r($_POST, true) . '</pre>'; die;
+            //echo '<pre>' . print_r($this->arrLanguages, true) . '</pre>'; die;
+
+            $countSuccess = 0;
+
+            try {
+                $transaction = $articleModel->dbConnection->beginTransaction();
+
+                $number = $_POST['CArticle']['number'];
+
+                $parentModel->updateAll( array(
+                        'number' => new CDbExpression( 'number + 1' )
+                    ),
+                    "parent_id=:parent_id and number >= :number",
+                    array(
+                        ':parent_id' => $parentId,
+                        ':number' => $number
+                    )
+                );
+
+                $articleId = Yii::app()->db->createCommand()
+                    ->select('max(id)+1')
+                    ->from('article')
+                    ->queryScalar();
+
+                $articleCode = Yii::app()->db->createCommand()
+                    ->select('max(code)+1')
+                    ->from('article')
+                    ->where("parent_id=:parent_id", array(':parent_id' => $parentId))
+                    ->queryScalar();
+
+                foreach ( $this->arrLanguages as $lang => $langName) {
+                    $model = $articleModels[$lang];
+
+                    $model->attributes = $_POST['CArticle'][$lang];
+                    $model->attributes = $_POST['CArticle'];
+
+                    $model->id = $articleId;
+                    $model->lang = $lang;
+
+                    $model->code = $articleCode;
+
+                    $model->img_big_h = $parentModel->img_big_h;
+                    $model->img_thumb_h = $parentModel->img_thumb_h;
+
+                    $model->isNewRecord = true;
+
+                    //echo '<pre>' . print_r($model->attributes, true) . '</pre>';
+                    if ($model->save(true)) {
+                        $countSuccess++;
+                    }
+                }
+            } catch (Exception $e) {
+                Yii::app()->user->setFlash('error',$e->getMessage());
             }
-		}
 
-		$this->render('create',array(
-			'model'=>$model,
-		));
+            //$transaction->rollback();die();
+
+            if ( $countSuccess == count($this->arrLanguages) ) {
+                $transaction->commit();
+                Yii::app()->user->setFlash('success','Статья успешно добавлена!');
+                $this->redirect('/article/update/id/' . $parentId);
+            } else {
+                $transaction->rollback();
+                Yii::app()->user->setFlash('error','Ошибка при добавлении статьи');
+            }
+        }
+
+        $this->render('create', array(
+            'articleModels' => $articleModels,
+            'articleModel' => $articleModel,
+            'articleHeader' => $articleHeader,
+            'isSubArticle' => $isSubArticle,
+            'subarticles' => $subarticles,
+        ));
 	}
 
 	/**
@@ -106,47 +196,104 @@ class ArticleController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-		$model=$this->loadModel($id, $this->lang);
-
-        //$subarticles = CArticle::model()->findAllByAttributes(array('parent_id' => $model->id));
-        $subarticles = $model->subarticles;
-
-        $returnUrl = Yii::app()->request->getParam('returnUrl');
-        if ($model->isSubArticle()) {
-            //$parent = CArticle::model()->findByPk($model->parent_id);
-            $articleHeader = $model->parent->header;
-        } else {
-            $articleHeader = $model->header;
+        //print_r($_REQUEST); die;
+        if (isset($_POST['cancel'])) {
+            //Yii::app()->user->setFlash('success','Изменения были отменены');
+            $this->redirect($this->returnUrl);
         }
 
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+        $articleModels = array();
+
+        foreach ( $this->arrLanguages as $lang => $langName) {
+            $articleModels[$lang] = $this->loadModel($id, $lang);
+        }
+        $articleModel = $articleModels['ru'];
+        $isSubArticle = $articleModel->isSubArticle();
+        $subarticles = $articleModel->subarticles;
+
+        if ($articleModel->isSubArticle()) {
+            $articleHeader = $articleModel->parent->header;
+        } else {
+            $articleHeader = $articleModel->header;
+        }
 
 		if (isset($_POST['CArticle'])) {
-			$model->attributes=$_POST['CArticle'];
 
-			if($model->save() && $returnUrl)
-				$this->redirect($returnUrl);
+            //echo '<pre>' . print_r($_POST, true) . '</pre>'; die;
+            $transaction = $articleModel->dbConnection->beginTransaction();
+
+            if ($isSubArticle) {
+                $origNumber = $articleModel->number;
+                $newNumber = $_POST['CArticle']['number'];
+
+                if ( $origNumber != $newNumber ) {
+
+                    //reorder article numbers
+                    if ( $origNumber > $newNumber ) {
+                        $articleModel->updateAll( array(
+                                'number' => new CDbExpression( 'number + 1' )
+                            ),
+                            "parent_id=:parent_id and :min_number <= number and number < :max_number ",
+                            array(
+                                ':parent_id' => $articleModel->parent_id,
+                                ':min_number' => min($origNumber, $newNumber),
+                                ':max_number' => max($origNumber, $newNumber),
+                            )
+                        );
+                    } else {
+                        $articleModel->updateAll( array(
+                                'number' => new CDbExpression( 'number - 1' )
+                            ),
+                            "parent_id=:parent_id and :min_number < number and number <= :max_number ",
+                            array(
+                                ':parent_id' => $articleModel->parent_id,
+                                ':min_number' => min($origNumber, $newNumber),
+                                ':max_number' => max($origNumber, $newNumber),
+                            )
+                        );
+                    }
+                }
+            }
+
+            $countSuccess = 0;
+            foreach ( $this->arrLanguages as $lang => $langName) {
+                $model = $articleModels[$lang];
+
+                $model->attributes = $_POST['CArticle'][$lang];
+                $model->attributes = $_POST['CArticle'];
+
+                if ($model->save()) {
+                    $countSuccess++;
+                }
+            }
+            if ( $countSuccess == count($this->arrLanguages) ) {
+                $transaction->commit();
+                Yii::app()->user->setFlash('success','Информация успешно обновлена!');
+                $this->redirect($this->returnUrl);
+            } else {
+                $transaction->rollback();
+                Yii::app()->user->setFlash('error','Ошибка при редактировании статьи');
+            }
 		}
 
-        $code = $model->code;
+        $code = $articleModel->code;
         $activePage = '';
-        if ($model->isSubArticle()) {
-            $activePage = "/" . $model->code;
-            $code = $model->parent->code;
+        if ($isSubArticle) {
+            $activePage = "/" . $articleModel->code;
+            $code = $articleModel->parent->code;
         }
 
         $photos = CPhoto::model()->findAllByAttributes(array('article_id' => $id));
         $path = "/images/articles/{$code}{$activePage}/";
 
-
 		$this->render('update',array(
-			'model'=>$model,
+			'articleModels' => $articleModels,
+            'articleModel' => $articleModel,
             'articleHeader' => $articleHeader,
+            'isSubArticle' => $isSubArticle,
             'subarticles' => $subarticles,
             'path' => $path,
             'files' => $photos,
-            'returnUrl' => $returnUrl,
 		));
 	}
 
@@ -157,17 +304,39 @@ class ArticleController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		if(Yii::app()->request->isPostRequest)
-		{
-			// we only allow deletion via POST request
-			$this->loadModel($id, null)->delete();
+        $articleModel = $this->loadModel($id, 'ru');
 
-			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-			if(!isset($_GET['ajax']))
-				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
-		}
-		else
-			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
+        if ($articleModel->isSubArticle()) {
+            $photoModel = CPhoto::model();
+
+            $transaction = $articleModel->dbConnection->beginTransaction();
+
+            $articleModel->deleteAll( 'id=:id', array(':id' => $id) );
+            $photoModel->deleteAll( 'article_id=:article_id', array(':article_id' => $id) );
+
+            $articleModel->updateAll(
+                array( 'number' => new CDbExpression( 'number - 1' )),
+                "parent_id=:parent_id and number > :number",
+                array(
+                    ':parent_id' => $articleModel->parent_id,
+                    ':number' => $articleModel->number
+                )
+            );
+
+            $imagePath = $articleModel->getImagePath();
+
+            $folder = YiiBase::getPathOfAlias('application') . '/..'. $imagePath;
+            if (file_exists($folder)) {
+                Helpers::deleteDirectory($folder);
+            }
+
+            $transaction->commit();
+            Yii::app()->user->setFlash('success', 'Страница успешно удалена.');
+
+            // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+            if(!isset($_GET['ajax']))
+                $this->redirect($this->returnUrl);
+        }
 	}
 
 	/**
@@ -203,10 +372,14 @@ class ArticleController extends Controller
 	 */
 	public function loadModel($id, $lang)
 	{
-        //echo $id; die;
-		$model=CArticle::model()->findByPk(array('id' => $id, 'lang' => $lang));
-		if($model===null)
-			throw new CHttpException(404,'The requested page does not exist.');
+        if ($id != null) {
+		    $model=CArticle::model()->findByPk(array('id' => $id, 'lang' => $lang));
+		    if($model===null)
+			    throw new CHttpException(404,'The requested page does not exist.');
+        } else {
+            $model = CArticle::model();
+            $model->lang = $lang;
+        }
 		return $model;
 	}
 
