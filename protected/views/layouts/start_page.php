@@ -29,6 +29,10 @@
     </div>
 </div><!-- .l-wrapper -->
 
+<div class="metrika" >
+    <?php include "ya.metrika.php"; ?>
+</div>
+
 <?php  $this->widget('CFixPng', array()); ?>
 
 </body>
