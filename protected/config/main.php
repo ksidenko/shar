@@ -76,9 +76,9 @@ return array(
 			),
 		),
 		'db'=>array(
-			'connectionString' => 'mysql:host=localhost;dbname=shar_db_13.11.2012',
+			'connectionString' => 'mysql:host=localhost;dbname=shar_db',
 			'emulatePrepare' => true,
-			'username' => 'root',
+			'username' => 'shar',
 			'password' => '1',
 			'charset' => 'utf8',
             'enableProfiling' => YII_DEBUG,
