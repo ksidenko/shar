@@ -8,7 +8,7 @@
     <meta name="keywords" content="<?php if(isset($this->pageKeywords)) echo $this->pageKeywords; ?>" />
     <meta name="description" content="<?php if(isset($this->pageDescription)) echo $this->pageDescription; ?>" />
     <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.lightbox/css/jquery.lightbox-0.5.css" type="text/css" media="screen, projection" />
-    <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/style2.css?15022014" type="text/css" media="screen, projection" />
+    <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/style2.css?16022014" type="text/css" media="screen, projection" />
     <link rel="stylesheet" type="text/css" href="<?php //echo Yii::app()->request->baseUrl; ?>/js/jquery.ad-gallery/jquery.ad-gallery.css" />
     <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/jquery.ad-gallery.css" type="text/css" media="screen, projection" />
     <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.lightbox/css/jquery.lightbox-0.5.css" type="text/css" media="screen, projection" />
