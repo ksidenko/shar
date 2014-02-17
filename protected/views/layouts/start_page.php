@@ -21,18 +21,26 @@
     $links = array();
     $links []= array("text" => 'АРХИТЕКТУРНОЕ ПРОЕКТИРОВАНИЕ', "link" => Yii::app()->createUrl('house'));
     $links []= array("text" => 'ДИЗАЙН ПРОЕКТИРОВАНИЕ ИНТЕРЬЕРОВ ЗАГОРОДНЫХ ДОМОВ И КОТТЕДЖЕЙ', "link" => Yii::app()->createUrl('house'));
-    $links []= array("text" => 'ДИЗАЙН ПРОЕКТИРОВАНИЕ ИНТЕРЬЕРОВ КВАРТИР', "link" => Yii::app()->createUrl('flat'));
+    $links []= array("text" => 'ДИЗАЙН ПРОЕКТИРОВАНИЕ ИНТЕРЬЕРОВ КВАРТИР', "link" => Yii::app()->createUrl('flat'), "has_br" => true);
     $links []= array("text" => 'ДИЗАЙН ПРОЕКТИРОВАНИЕ ОБЩЕСТВЕННЫХ ИНТЕРЬЕРОВ И ОФИСОВ', "link" => Yii::app()->createUrl('society'));
     $links []= array("text" => 'РАЗРАБОТКА ФИРМЕННОГО СТИЛЯ', "link" => Yii::app()->createUrl('corp_style'));
 
-    $s = array();
+    $s = '';
+    $sep = ' / ';
     foreach($links as $row) {
-        $s []= CHTML::link(mb_strtolower($row['text'], 'UTF8'), $row['link'], array('style' => 'font-size:10px; color:#797367;'));
+        $br = $sep;
+
+        if (!empty($row['has_br'])) {
+            $br = '<br />';
+        }
+
+        $s .= CHTML::link(mb_strtoupper($row['text'], 'UTF8'), $row['link'], array('style' => 'font-size:11px; font-weight: bold; color:white; text-decoration:none;')) . $br;
     }
+    $s = rtrim ($s, $sep);
 ?>
 
-<div style="left:10px; color:#797367; position: relative; " >
-    <?php echo implode($s, ' | '); ?>
+<div style="color:white; height: 40px; width: 100%; background-color: black; text-align: center;" >
+    <?php echo $s; ?>
 </div>
 
 <div class="l-wrapper-loader">
