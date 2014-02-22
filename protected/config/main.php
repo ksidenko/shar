@@ -63,8 +63,8 @@ return array(
                 '/sign/*' => '/page/graph/type/sign',
                 '/corp_style/*' => '/page/graph/type/corp_style',
                 '/graph/*' => '/page/graph/type/graph',
-                '/price/*' => '/page/price',
 
+                '/price/*' => '/page/price',
                 '/contacts/*' => '/page/contacts',
                 '/partners/*' => '/page/partners',
 		
