@@ -8,12 +8,13 @@
     <meta name="keywords" content="<?php if(isset($this->pageKeywords)) echo $this->pageKeywords; ?>" />
     <meta name="description" content="<?php if(isset($this->pageDescription)) echo $this->pageDescription; ?>" />
     <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.lightbox/css/jquery.lightbox-0.5.css" type="text/css" media="screen, projection" />
-    <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/style2.css?16022014" type="text/css" media="screen, projection" />
-    <link rel="stylesheet" type="text/css" href="<?php //echo Yii::app()->request->baseUrl; ?>/js/jquery.ad-gallery/jquery.ad-gallery.css" />
+    <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/style2.css?23022014_" type="text/css" media="screen, projection" />
+    <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.ad-gallery/jquery.ad-gallery.css" type="text/css" media="screen, projection" />
     <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/jquery.ad-gallery.css" type="text/css" media="screen, projection" />
     <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.lightbox/css/jquery.lightbox-0.5.css" type="text/css" media="screen, projection" />
     <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/form.css" type="text/css" media="screen, projection" />
-    <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery-1.3.2.min.js"></script>
+
+    <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery-1.11.0.min.js"></script>
 </head>
 <body>
 

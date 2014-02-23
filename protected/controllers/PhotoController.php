@@ -61,57 +61,133 @@ class PhotoController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new CPhoto;
         $result = array('error' => '', 'msg' => '');
-		if (isset($_REQUEST['CPhoto'])) {
-			$model->attributes=$_REQUEST['CPhoto'];
-            $model->path=CUploadedFile::getInstance($model,'path');
 
-            $transaction=$model->dbConnection->beginTransaction();
-			if ($model->save() && $model->path) {
-
-                $imagePath = $model->getImagePath();
-                $folder = YiiBase::getPathOfAlias('application') . '/..' . $imagePath ;
-
-                if (!file_exists($folder)) {
-                    mkdir($folder);
-                    mkdir($folder . '/big');
-                    mkdir($folder . '/thumbs');
-                }
-
-                $fileName_ = Helpers::tempFileName($folder, '');
-                $fileName = $fileName_ . '.' . $model->path->getExtensionName();
-
-                $result['msg'] .= $folder . $fileName;
-                $model->path->saveAs($folder . $fileName);
-
-                $article = $model->article;
-                if ($article->isSubArticle()) {
-                    $article = $article->parent;
-                }
-
-                Helpers::imageresize($folder . '/big/' . $fileName, $folder . $fileName, 1111, $article->img_big_h, 90, array('fix_h' => true));
-                Helpers::imageresize($folder . '/thumbs/' . $fileName, $folder . $fileName, 1111, $article->img_thumb_h, 90, array('fix_h' => true));
-                $model->path = $fileName;
-                $model->save();
-
-                @unlink($folder . '/' . $fileName_);
-
-                $li = Helpers::renderImageBlock ($imagePath, $fileName, $model->id);
-                $transaction->commit();
-                $result['html'] = urlencode($li);
-            } else {
-                $result['error'] = $model->getErrors();
-                $transaction->rollback();
+		try {
+            $articleId = Yii::app()->request->getParam('article_id', null);
+            if (!$articleId) {
+                throw new Exception ('Not set article id!');
             }
-		} else {
-            $result['error'] .= print_r($_REQUEST, true);
+
+            $photoAR = CPhoto::model();
+			$photoAR->article_id = $articleId;
+
+            $uploader = CUploadedFile::getInstance(CPhoto::model(), 'path');
+            if (!$uploader) {
+                throw new Exception ('Cannot init CUploadedFile');
+            }
+
+            $imagePath = $photoAR->getImagePath();
+            $folder = realpath(YiiBase::getPathOfAlias('application') . '/..' . $imagePath) . '/' ;
+
+            if (!file_exists($folder)) {
+                mkdir($folder);
+                mkdir($folder . 'big');
+                mkdir($folder . 'thumbs');
+            }
+
+            $fileName_ = Helpers::tempFileName($folder, '');
+            $fileName = $fileName_ . '.' . $uploader->getExtensionName();
+
+            $result['msg'] .= $folder . $fileName;
+
+            $uploader->saveAs($folder . $fileName, true);
+
+            $articleAR = $photoAR->article;
+            if ($articleAR->isSubArticle()) {
+                $articleAR = $articleAR->parent;
+            }
+
+            Helpers::imageresize($folder . 'big/' . $fileName, $folder . $fileName, 1111, $articleAR->img_big_h, 90, array('fix_h' => true));
+            Helpers::imageresize($folder . 'thumbs/' . $fileName, $folder . $fileName, 1111, $articleAR->img_thumb_h, 90, array('fix_h' => true));
+
+            $photoAR->path = $fileName;
+            $photoAR->isNewRecord = true;
+            $photoAR->save();
+
+            //@unlink($folder . $fileName_);
+
+            $result['html'] = urlencode(Helpers::renderImageBlock ($imagePath, $fileName, $photoAR->id));
+
+        } catch (Exception $e) {
+            $result['error'] = $e->getMessage();
         }
 
         echo json_encode($result);
 
         Yii::app()->end();
 	}
+
+    public function actionCreateMainPhoto()
+    {
+        $result = array('error' => '', 'msg' => '');
+
+        try {
+            $articleId = Yii::app()->request->getParam('article_id', null);
+            if (!$articleId) {
+                throw new Exception ('Not set article id!');
+            }
+            $photoAR = CPhoto::model()->findByAttributes(array('article_id' => $articleId, 'is_main' => 1));
+            if (!$photoAR) {
+                $photoAR = CPhoto::model();
+                $photoAR->article_id = $articleId;
+                $photoAR->number = 0;
+                $photoAR->is_main = 1;
+                $photoAR->isNewRecord = true;
+            } else {
+                $photoAR->isNewRecord = false;
+            }
+
+            $uploader = CUploadedFile::getInstance(CPhoto::model(), 'main_photo_path');
+            if (!$uploader) {
+                throw new Exception ('Cannot init CUploadedFile');
+            }
+
+            $imagePath = $photoAR->getImagePath();
+            $folder = realpath(YiiBase::getPathOfAlias('application') . '/..' . $imagePath) . '/' ;
+
+            if (!file_exists($folder)) {
+                mkdir($folder);
+            }
+
+            $fileName_ = Helpers::tempFileName($folder, 'main_');
+            $fileName = $fileName_ . '.' . $uploader->getExtensionName();
+
+            if (!empty($photoAR->path)) {
+                @unlink($folder . $photoAR->path);
+            }
+
+            $photoAR->path = $fileName;
+
+            $result['msg'] .= $folder . $fileName;
+
+            $uploader->saveAs($folder . $fileName, true);
+
+            if ($uploader->getHasError()) {
+                throw new Exception ('Ошибка загрузки файла: ' . $uploader->getError());
+            }
+
+            $tmp = '__';
+            Helpers::imageresize($folder . $fileName . $tmp, $folder . $fileName, 210, 210, 90);
+            @unlink($folder . $fileName);
+            rename($folder . $fileName . $tmp, $folder . $fileName);
+
+            $result['msg'] .= print_r($photoAR->getAttributes(), true);
+
+            if (!$photoAR->save()) {
+                throw new Exception ('Cant save $photoAR!');
+            }
+
+            $result['html'] = urlencode(Helpers::renderMainPhotoImage($imagePath, $fileName));
+
+        } catch (Exception $e) {
+            $result['error'] = $e->getMessage();
+        }
+
+        echo json_encode($result);
+
+        Yii::app()->end();
+    }
 
 
     public function actionUploadPhotoArchive()
@@ -123,9 +199,6 @@ class PhotoController extends Controller
         if (isset($_REQUEST['CPhoto'])) {
             $model->attributes=$_REQUEST['CPhoto'];
             $model->path=CUploadedFile::getInstance($model,'path');
-
-
-
 
             $archivePath = $model->path->getTempName();
             $archiveTempPath = '/tmp/upload/';
@@ -223,43 +296,34 @@ class PhotoController extends Controller
 	{
         $result = array('error' => '', 'msg' => '', );
 
-        //if(Yii::app()->request->isPostRequest)
-		//{
-			// we only allow deletion via POST request
-
+        if (Yii::app()->request->isPostRequest) {
 			$model = $this->loadModel($id);
-            $transaction=$model->dbConnection->beginTransaction();
 
             $imagePath = $model->getImagePath();
             $fileName = $model->path;
             $model->delete();
 
-            $folder = YiiBase::getPathOfAlias('application') . '/..' . $imagePath ;
+            $folder = realpath(YiiBase::getPathOfAlias('application') . '/..' . $imagePath) . '/';
 
-            $result['msg']['big'] = $folder . '/big/' . $fileName;
-            if (file_exists($folder . '/big/' . $fileName)) {
-                @unlink($folder . '/big/' . $fileName);
+            $result['msg']['big'] = $folder . 'big/' . $fileName;
+            if (file_exists($folder . 'big/' . $fileName)) {
+                @unlink($folder . 'big/' . $fileName);
             }
 
-            $result['msg']['thumbs'] = $folder . '/thumbs/' . $fileName;
-            if (file_exists($folder . '/thumbs/' . $fileName)) {
-                @unlink($folder . '/thumbs/' . $fileName);
+            $result['msg']['thumbs'] = $folder . 'thumbs/' . $fileName;
+            if (file_exists($folder . 'thumbs/' . $fileName)) {
+                @unlink($folder . 'thumbs/' . $fileName);
             }
 
-            $result['msg']['/'] = $folder . '/' . $fileName;
-            if (file_exists($folder . '/' . $fileName)) {
-                @unlink($folder . '/' . $fileName);
+            $result['msg']['/'] = $folder . $fileName;
+            if (file_exists($folder . $fileName)) {
+                @unlink($folder . $fileName);
             }
+		}
 
-            $transaction->commit();
+        echo json_encode($result);
 
-            echo json_encode($result);
-
-            Yii::app()->end();
-
-//		}
-//		else
-//			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
+        Yii::app()->end();
 	}
 
 	/**

@@ -386,3 +386,13 @@ a.link_article_del {
     padding: 10px 0 200px 40px;
 }
 
+
+/* Page: edit page images
+-----------------------------------------------------------------------------*/
+div.main_photo {
+    padding: 20px 0px;
+    border-top: 1px dotted #c9c9c9;
+    border-bottom: 1px dotted #c9c9c9;
+}
+
+

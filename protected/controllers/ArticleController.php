@@ -283,7 +283,7 @@ class ArticleController extends Controller
             $code = $articleModel->parent->code;
         }
 
-        $photos = CPhoto::model()->findAllByAttributes(array('article_id' => $id));
+        $photos = CPhoto::model()->findAllByAttributes(array('article_id' => $id, 'is_main' => 0));
         $path = "/images/articles/{$code}{$activePage}/";
 
 		$this->render('update',array(

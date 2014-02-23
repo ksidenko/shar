@@ -23,6 +23,7 @@ class PageController extends Controller
             Yii::app()->clientScript->registerScriptFile($baseUrlJs . '/jquery.lightbox/js/jquery.lightbox-0.5.pack.js', CClientScript::POS_END);
             Yii::app()->clientScript->registerCssFile($baseUrlJs . '/jquery.lightbox/css/jquery.lightbox-0.5.css', CClientScript::POS_END);
 
+            Yii::app()->clientScript->registerScriptFile($baseUrlJs . '/jquery.SudoSlider/jquery.sudoSlider.min.js', CClientScript::POS_END);
             Yii::app()->clientScript->registerScriptFile($baseUrlJs . '/lightbox_init.js', CClientScript::POS_END);
 
         }
@@ -71,7 +72,7 @@ class PageController extends Controller
         //print_r($this->pageTextInfo);
         $countPage = count($article->subarticles);
 
-        $photos = CPhoto::model()->findAllByAttributes(array('article_id' => $subarticle->id));
+        $photos = CPhoto::model()->findAllByAttributes(array('article_id' => $subarticle->id, 'is_main' => 0));
         //print_r(count($photos)); die;
         if ($activePage > $countPage) {
             $activePage = 1;
@@ -90,6 +91,46 @@ class PageController extends Controller
               'countPage' => $countPage,
               'descr' => $subarticle->descr,
             )
+        );
+    }
+
+    public function actionIntererAlbum($type = 'flat') {
+        $lang = Yii::app()->getLanguage();
+
+        $returnUrl = '/page/intererAlbum/' . '/type/' . $type . '/lang/' . $lang;
+
+        $code = 'interer_' . $type;
+        $article = CArticle::model()->findByAttributes(array('code' => $code, 'lang' => $lang));
+
+        if ($article == false) {    $this->redirect('/main');   }
+
+        $this->pageTitle = !empty($article->title) ? $article->title : $article->header;
+        $this->pageKeywords = $article->keyword;
+        $this->pageDescription = $article->descr;
+
+        $articleHeader = $article->header;
+
+        $command = Yii::app()->db->createCommand("
+          SELECT *, (select path from photo p where p.article_id = a.id and is_main = 1) as main_logo_path
+          FROM article a
+          WHERE
+            a.parent_id = :article_id and a.lang = :lang
+            order by a.number
+        ");
+
+        $command->params = array(
+            ':article_id' => $article->id,
+            ':lang' => $lang
+        );
+
+        $photoGalleryData = $command->queryAll();
+
+        $this->render('interer-gallery', array(
+                'article' => $article,
+                'photoGalleryData' => $photoGalleryData,
+                'returnUrl' => $returnUrl,
+                'type' => $type,
+             )
         );
     }
 

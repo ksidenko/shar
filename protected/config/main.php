@@ -56,9 +56,13 @@ return array(
 			    '/*' => 'page/index',
                 '/main/*' => '/page/main',
 
-                '/flat/*' => '/page/interer/type/flat',
-                '/house/*' => '/page/interer/type/house',
-                '/society/*' => '/page/interer/type/society',
+                '/flat/*' => '/page/intererAlbum/type/flat',
+                '/house/*' => '/page/intererAlbum/type/house',
+                '/society/*' => '/page/intererAlbum/type/society',
+
+//                '/flat1/*' => '/page/intererAlbum/type/flat',
+//                '/house1/*' => '/page/intererAlbum/type/house',
+//                '/society1/*' => '/page/intererAlbum/type/society',
 
                 '/sign/*' => '/page/graph/type/sign',
                 '/corp_style/*' => '/page/graph/type/corp_style',
@@ -100,6 +104,9 @@ return array(
 				),
 			),
 		),
+        'assetManager'=>array(
+            'basePath' => '/tmp/shar_assets',
+        ),
 	),
 
 	'params'=>array(

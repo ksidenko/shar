@@ -1,0 +1,74 @@
+/* Album gallery
+-----------------------------------------------------------------------------*/
+
+.gallery-album {
+    height: 700px;
+    display: block;
+    margin-left: 25px;
+    margin-top: 10px;
+}
+
+.gallery-album .album{
+    width:208px;
+    padding:10px;
+    border:1px solid #e5e5e5;
+    border-radius:5px;
+    height:auto;
+    height:290px;
+    float:left;
+    margin:0 10px 10px 0;
+    position:relative;
+}
+
+.album_icons {
+    padding: 0 0 1px 0;
+    border-bottom: 1px dotted #c9c9c9;
+    margin-bottom: 7px;
+}
+
+.album_photo {
+    height: 210px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 5px;
+}
+
+.album_descr {
+    padding: 2px 0px 4px;
+    font-size: 11px;
+    line-height: 16px;
+    color: white;
+
+    /*border-top: 1px dotted #c9c9c9;*/
+}
+
+.album_descr .album_link {
+    font-size: 13px;
+    color: white;
+    display: block;
+    margin-top: 3px;
+    text-decoration: none;
+}
+
+.album_descr .album_link:hover {
+    text-decoration: underline;
+}
+
+.prevBtn {
+    background: url(/js/jquery.ad-gallery/ad_prev_orig.png);
+    width: 30px;
+    height: 30px;
+    display: none;
+    position: absolute;
+    top: 47%;
+    left: 0;
+    z-index: 101;
+}
+
+.nextBtn {
+    background: url(/js/jquery.ad-gallery/ad_next_orig.png);
+    width: 30px;
+    height: 30px;
+    right: 0;
+    left: auto;
+}

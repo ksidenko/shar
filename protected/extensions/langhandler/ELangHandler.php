@@ -9,6 +9,9 @@ class ELangHandler extends CApplicationComponent {
     }
 
     private function parseLanguage() {
+        if ( php_sapi_name() == 'cli' ) {
+            return true;
+        }
 
         Yii::app()->urlManager->parseUrl(Yii::app()->getRequest());
         //echo '<pre>'. print_r($_GET, 1) . '</pre>'; die;

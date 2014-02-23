@@ -12,7 +12,7 @@
             $model = $articleModels[$lang];
     ?>
 
-        <fieldset class="g-fleft" style="width:370px; margin-right:30px; display: block;" >
+        <fieldset class="g-fleft" style="width:420px; margin-right:30px; display: block;" >
             <?php echo CHtml::tag('legend', array('style' => 'color:white;'), $langName); ?>
 
         <?php echo $form->errorSummary($model); ?>
@@ -20,19 +20,19 @@
         <?php if (!$isSubArticle) { ?>
             <div class="row">
                 <?php echo $form->labelEx($model,"[{$lang}]title"); ?>
-                <?php echo $form->textField($model,"[{$lang}]title",array("size"=>35,"maxlength"=>2048)); ?>
+                <?php echo $form->textField($model,"[{$lang}]title",array("maxlength"=>2048, "style"=>'width:100%')); ?>
                 <?php echo $form->error($model,"[{$lang}]title"); ?>
             </div>
     
             <div class="row">
                 <?php echo $form->labelEx($model,"[{$lang}]header"); ?>
-                <?php echo $form->textField($model,"[{$lang}]header",array("size"=>35,"maxlength"=>1024)); ?>
+                <?php echo $form->textField($model,"[{$lang}]header",array("maxlength"=>1024, "style"=>'width:100%')); ?>
                 <?php echo $form->error($model,"[{$lang}]header"); ?>
             </div>
     
             <div class="row">
                 <?php echo $form->labelEx($model,"[{$lang}]keyword"); ?>
-                <?php echo $form->textArea($model,"[{$lang}]keyword",array("rows"=>3, "cols"=>50)); ?>
+                <?php echo $form->textArea($model,"[{$lang}]keyword",array("rows"=>4, "style"=>'width:100%')); ?>
                 <?php echo $form->error($model,"[{$lang}]keyword"); ?>
             </div>
 
@@ -40,7 +40,7 @@
             
         <div class="row">
             <?php echo $form->labelEx($model,"[{$lang}]descr"); ?>
-            <?php echo $form->textArea($model,"[{$lang}]descr",array('rows' => 3, 'cols' => 50)); ?>
+            <?php echo $form->textArea($model,"[{$lang}]descr",array('rows' => 4, "style"=>'width:100%')); ?>
             <?php echo $form->error($model,"[{$lang}]descr"); ?>
         </div>
 
@@ -50,13 +50,13 @@
     <div style="clear:both;" ></div>
 
     <?php if ($isSubArticle) { ?>
-    <div class="row">
-        <?php echo $form->labelEx($model,"number"); ?>
-    <?php
-        //TODO
-        echo $form->dropDownList($model,"number", array_combine(range(1,20), range(1,20)), array("maxlength"=>5)); ?>
-        <?php echo $form->error($model,"number"); ?>
-    </div>
+        <div class="row">
+            <?php echo $form->labelEx($model,"number"); ?>
+            <?php //TODO
+                echo $form->dropDownList($model,"number", array_combine(range(1,30), range(1,30)), array("maxlength"=>5));
+            ?>
+            <?php echo $form->error($model,"number"); ?>
+        </div>
     <?php } ?>
 
     <?php if (!$isSubArticle) { ?>
