@@ -54,7 +54,7 @@ class SiteController extends Controller
 	 */
 	public function actionLogin()
 	{
-        Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl . '/css/form.css', CClientScript::POS_HEAD);
+        Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl . '/css/form.css');
 
 		$model=new LoginForm;
 

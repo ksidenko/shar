@@ -56,15 +56,15 @@ class PageController extends Controller
             case 'interer':
             case 'graph':
                 Yii::app()->clientScript->registerScriptFile($baseUrlJs . '/jquery.ad-gallery/jquery.ad-gallery.js', CClientScript::POS_BEGIN);
-                Yii::app()->clientScript->registerCssFile($baseUrlJs . '/jquery.ad-gallery/jquery.ad-gallery.css?' . Yii::app()->params['hash_css'], CClientScript::POS_HEAD);
-                Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl . '/css/jquery.ad-gallery.css?' . Yii::app()->params['hash_css'], CClientScript::POS_HEAD);
+                Yii::app()->clientScript->registerCssFile($baseUrlJs . '/jquery.ad-gallery/jquery.ad-gallery.css?' . Yii::app()->params['hash_css']);
+                Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl . '/css/jquery.ad-gallery.css?' . Yii::app()->params['hash_css']);
                 Yii::app()->clientScript->registerScriptFile($baseUrlJs . '/gallery_init.js', CClientScript::POS_BEGIN);
 
                 Yii::app()->clientScript->registerScriptFile($baseUrlJs . '/jquery.lightbox/js/jquery.lightbox-0.5.pack.js', CClientScript::POS_END);
-                Yii::app()->clientScript->registerCssFile($baseUrlJs . '/jquery.lightbox/css/jquery.lightbox-0.5.css?' . Yii::app()->params['hash_css'], CClientScript::POS_BEGIN);
+                Yii::app()->clientScript->registerCssFile($baseUrlJs . '/jquery.lightbox/css/jquery.lightbox-0.5.css?' . Yii::app()->params['hash_css']);
                 Yii::app()->clientScript->registerScriptFile($baseUrlJs . '/lightbox_init.js', CClientScript::POS_END);
 
-                Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl . '/css/form.css?' . Yii::app()->params['hash_css'], CClientScript::POS_HEAD);
+                Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl . '/css/form.css?' . Yii::app()->params['hash_css']);
                 break;
 
             default:

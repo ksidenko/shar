@@ -55,7 +55,7 @@ class ArticleController extends Controller
         $baseUrlJs = Yii::app()->getAssetManager()->publish($basePath, true, -1, YII_DEBUG);
 
         if (in_array($action, array('update')) ) {
-            Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl . '/css/form.css?' . Yii::app()->params['hash_css'], CClientScript::POS_HEAD);
+            Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl . '/css/form.css?' . Yii::app()->params['hash_css']);
             Yii::app()->clientScript->registerScriptFile($baseUrlJs . '/jquery.ajaxfileupload/ajaxfileupload.js', CClientScript::POS_BEGIN);
         }
 
