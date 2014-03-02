@@ -122,6 +122,6 @@ return array(
         'image_path' => dirname(__FILE__) . '/../../images/articles/',
         'image_render_max_execution_time' => 60 * 60 ,
         'image_url' => '',
-        'hash_css' => '2022014',
+        'hash_css' => '2022014_2',
 	),
 );
