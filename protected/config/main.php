@@ -79,6 +79,14 @@ return array(
 
 			),
 		),
+        'clientScript'=>array(
+            'packages'=>array(
+                'jquery'=>array(
+                    'baseUrl'=>'/js/',
+                    'js'=>array('jquery-1.3.2.min.js'),
+                )
+            ),
+        ),
 		'db'=>array(
 			'connectionString' => 'mysql:host=localhost;dbname=shar_db',
 			'emulatePrepare' => true,
@@ -114,5 +122,6 @@ return array(
         'image_path' => dirname(__FILE__) . '/../../images/articles/',
         'image_render_max_execution_time' => 60 * 60 ,
         'image_url' => '',
+        'hash_css' => '2022014',
 	),
 );

@@ -1,11 +1,17 @@
-<link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/style-gallery.css" type="text/css" media="screen, projection" />
+<style><?php
+    $basePath = Yii::getPathOfAlias('application').'/..';
+    $file = $basePath .'/css/style-gallery.css';
+    include_once $file; ?>
+</style>
 <script type="text/javascript" >
     $(document).ready(function(){
         var sudoSlider = $("#slider").sudoSlider({
-            auto:true,
-            prevNext:false,
-            speed: 3000,
+            auto:false,
+            prevNext:true,
+            speed: 1500,
             pause: 4000,
+            prevHtml: '<a href="#" class="prevBtn">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>', /* option[34]/*prevhtml*/
+            nextHtml: '<a href="#" class="nextBtn">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>', /* option[35]/*nexthtml*/
             afterAnimation: function (t) {
 //                if (t == sudoSlider.getValue("totalSlides")) {
 //                    sudoSlider.stopAuto();

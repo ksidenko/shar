@@ -2,14 +2,12 @@
 
 class ArticleController extends Controller
 {
-	/**
-	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
-	 * using two-column layout. See 'protected/views/layouts/column2.php'.
-	 */
     public $layout='//layouts/index';
+
     public $lang = 'ru';
     public $arrLanguages = array('ru' => 'Русский', 'en' => 'Английский');
     public $returnUrl = '/';
+
 
 	/**
 	 * @return array action filters
@@ -26,31 +24,28 @@ class ArticleController extends Controller
 	 * This method is used by the 'accessControl' filter.
 	 * @return array access control rules
 	 */
-    //TODO
-//	public function accessRules()
-//	{
-//		return array(
-//			array('allow',  // allow all users to perform 'index' and 'view' actions
-//				'actions'=>array('index','view'),
-//				'users'=>array('*'),
-//			),
-//			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-//				'actions'=>array('create','update'),
-//				'users'=>array('*'),
-//			),
-//			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-//				'actions'=>array('admin','delete'),
-//				'users'=>array('admin'),
-//			),
-//			array('deny',  // deny all users
-//				'users'=>array('*'),
-//			),
-//		);
-//	}
+	public function accessRules()
+	{
+		return array(
+			array('allow',  // allow all users to perform 'index' and 'view' actions
+				'actions'=>array('index','view'),
+				'users'=>array('*'),
+			),
+			array('allow', // allow admin user to perform 'admin' and 'delete' actions
+				'actions'=>array('create', 'update', 'delete'),
+				'users'=>array('admin', 'shar'),
+			),
+			array('deny',  // deny all users
+				'users'=>array('*'),
+			),
+		);
+	}
 
     protected function beforeAction($action) {
 
-        $action = $this->action->getId();
+        if ( !parent::beforeAction ($action) ) return false;
+
+        $action = mb_strtolower($action->getId(), 'UTF-8');
 
         $this->lang = Yii::app()->request->getParam('lang' /*, Yii::app()->getLanguage()*/);
 
@@ -60,6 +55,7 @@ class ArticleController extends Controller
         $baseUrlJs = Yii::app()->getAssetManager()->publish($basePath, true, -1, YII_DEBUG);
 
         if (in_array($action, array('update')) ) {
+            Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl . '/css/form.css?' . Yii::app()->params['hash_css'], CClientScript::POS_HEAD);
             Yii::app()->clientScript->registerScriptFile($baseUrlJs . '/jquery.ajaxfileupload/ajaxfileupload.js', CClientScript::POS_BEGIN);
         }
 

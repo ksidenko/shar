@@ -2,7 +2,7 @@
 -----------------------------------------------------------------------------*/
 
 .gallery-album {
-    height: 700px;
+    height: 650px;
     display: block;
     margin-left: 25px;
     margin-top: 10px;
@@ -54,21 +54,35 @@
     text-decoration: underline;
 }
 
-.prevBtn {
-    background: url(/js/jquery.ad-gallery/ad_prev_orig.png);
+.nextBtn {
+    display: block;
     width: 30px;
-    height: 30px;
-    display: none;
+    height: 380px;
     position: absolute;
-    top: 47%;
-    left: 0;
-    z-index: 101;
+    right: -10px;
+    top: 355px;
+    z-index: 1000;
+    background: url(/js/jquery.ad-gallery/ad_scroll_forward.gif) no-repeat 0 0;
+    cursor: pointer;
 }
 
-.nextBtn {
-    background: url(/js/jquery.ad-gallery/ad_next_orig.png);
-    width: 30px;
-    height: 30px;
-    right: 0;
-    left: auto;
+a.nextBtn {
+    text-decoration: none;
 }
+
+.prevBtn {
+    display: block;
+    width: 30px;
+    height: 380px;
+    position: absolute;
+    left: 0px;
+    top: 355px;
+    z-index: 1000;
+    background: url(/js/jquery.ad-gallery/ad_scroll_back.gif) no-repeat 0 0;
+    cursor: pointer;
+}
+
+a.prevBtn {
+    text-decoration: none;
+}
+

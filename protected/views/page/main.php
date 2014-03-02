@@ -6,10 +6,9 @@
     });
 </script>
 <?php
-    $lang = Yii::app()->getLanguage();
     $style = 'color:white;text-decoration: none; font-size: 12px;text-transform: uppercase;font-weight:bold;';
 ?>
-        <h1 class="menu-hline"><?php echo Yii::t('app', 'main_page_interer');?></h1>
+            <h1 class="menu-hline"><?php echo Yii::t('app', 'main_page_interer');?></h1>
             <div class="menu-icon">
                 <table class="row-ico" width="660" height="130" ><tr>
                     <td width="220">  
@@ -46,11 +45,11 @@
 						<div class="text_label"><a href="<?php echo Yii::app()->createUrl('graph'); ?>" style="<?php echo $style; ?>" >Живопись <br/>и графика<br/>&nbsp;</a></div>
                     </td>
                 </tr></table>
-                
 				<div class="g-clear"></div>
 			</div>
-		<div class="l-hline"></div>
-		<h1 class="menu-hline"><?php echo Yii::t('app', 'main_page_info');?></h1>
+
+            <div class="l-hline"></div>
+            <h1 class="menu-hline"><?php echo Yii::t('app', 'main_page_info');?></h1>
 			<div class="menu-icon">
                 <table class="row-ico" width="660" height="130" ><tr>
                     <td width="220">  
@@ -61,9 +60,11 @@
                         <a href="<?php echo Yii::app()->createUrl('contacts'); ?>"><img src="<?php echo Yii::app()->request->baseUrl; ?>/images/icon_contact.gif"  alt="Контакты" width="85" height="85" /></a>
 							<div class="text_label"><a href="<?php echo Yii::app()->createUrl('contacts'); ?>" style="<?php echo $style; ?>" >Контакты<br/>&nbsp;</a></div>
                     </td>
-						<td width="220">                         
-                            <a href="<?php echo Yii::app()->createUrl('partners'); ?>"><img src="<?php echo Yii::app()->request->baseUrl; ?>/images/icon_partner.gif"  alt="Наши партнеры" width="85" height="85" /></a>
-							<div class="text_label"><a href="<?php echo Yii::app()->createUrl('partners'); ?>" style="<?php echo $style; ?>" >Наши партнеры<br/>&nbsp;</a></div>
-                        </td>
-					</tr></table>                
+                    <td width="220">
+                        <a href="<?php echo Yii::app()->createUrl('partners'); ?>"><img src="<?php echo Yii::app()->request->baseUrl; ?>/images/icon_partner.gif"  alt="Наши партнеры" width="85" height="85" /></a>
+                        <div class="text_label"><a href="<?php echo Yii::app()->createUrl('partners'); ?>" style="<?php echo $style; ?>" >Наши партнеры<br/>&nbsp;</a></div>
+                    </td>
+                </tr></table>
+
+                <div class="g-clear"></div>
 			</div>
