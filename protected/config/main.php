@@ -83,7 +83,7 @@ return array(
             'packages'=>array(
                 'jquery'=>array(
                     'baseUrl'=>'/js/',
-                    'js'=>array('jquery-1.3.2.min.js'),
+                    'js'=>array('jquery-1.11.0.min.js'),
                 )
             ),
         ),
