@@ -113,7 +113,7 @@ return array(
 			),
 		),
         'assetManager'=>array(
-            'basePath' => '/tmp/shar_assets',
+            'basePath' => '/home/shar/tmp',
         ),
 	),
 

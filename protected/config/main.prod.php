@@ -28,6 +28,9 @@ return CMap::mergeArray(
             'errorHandler'=>array(
                 'errorAction'=>'/page/main',
             ),
+            'assetManager'=>array(
+                'basePath' => '/home/shar/tmp',
+            ),
         )
     )
 );
